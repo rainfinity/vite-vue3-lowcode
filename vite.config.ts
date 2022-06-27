@@ -114,7 +114,17 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       port: 10086, // 设置服务启动端口号
       open: false, // 设置服务启动时是否自动打开浏览器
       cors: true, // 允许跨域
-
+      hmr: process.env.GITPOD_WORKSPACE_URL
+        ? {
+            // removes the protocol and replaces it with the port we're connecting to
+            host: process.env.GITPOD_WORKSPACE_URL.replace('https://', '10086-'),
+            protocol: 'wss',
+            clientPort: 443,
+          }
+        : true,
+      fs: {
+        strict: true,
+      },
       // 设置代理，根据项目实际情况配置
       proxy: {
         '/api': {
