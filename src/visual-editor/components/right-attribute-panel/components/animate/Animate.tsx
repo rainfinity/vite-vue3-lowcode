@@ -8,13 +8,13 @@
  */
 import { defineComponent, reactive, ref, watchEffect } from 'vue';
 import { ElTabs, ElTabPane, ElRow, ElCol, ElButton, ElSwitch, ElAlert, ElIcon } from 'element-plus';
+import { onClickOutside } from '@vueuse/core';
+import { Plus, CaretRight } from '@element-plus/icons-vue';
 import { animationTabs } from './animateConfig';
 import styles from './animate.module.scss';
-import { onClickOutside } from '@vueuse/core';
-import { useVisualData } from '@/visual-editor/hooks/useVisualData';
 import type { Animation } from '@/visual-editor/visual-editor.utils';
+import { useVisualData } from '@/visual-editor/hooks/useVisualData';
 import { useAnimate } from '@/hooks/useAnimate';
-import { Plus, CaretRight } from '@element-plus/icons-vue';
 import 'element-plus/es/components/alert/style/css';
 
 export const Animate = defineComponent({
@@ -142,10 +142,10 @@ export const Animate = defineComponent({
     // 可添加的动画列表组件
     const AnimateList = () => (
       <ElTabs v-model={state.activeName} stretch>
-        {Object.keys(animationTabs).map((tabKey) => (
+        {Object.entries(animationTabs).map(([tabKey, animationBox]) => (
           <ElTabPane label={animationTabs[tabKey].label} name={tabKey} key={tabKey}>
             <ElRow gutter={10}>
-              {animationTabs[tabKey].value.map((animateItem: Animation) => (
+              {animationBox.value.map((animateItem: Animation) => (
                 <ElCol span={8} key={animateItem.value}>
                   <div
                     class={'animate-item'}

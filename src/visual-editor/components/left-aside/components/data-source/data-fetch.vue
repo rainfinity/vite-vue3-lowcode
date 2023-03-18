@@ -23,9 +23,9 @@
           <div class="model-item-title">
             <span class="truncate w-160px">{{ item.name }}</span>
             <div class="model-actions">
-              <el-icon size="24" color="#2196f3" @click.stop="editApiItem(item)">
+              <ElIcon :size="24" color="#2196f3" @click.stop="editApiItem(item)">
                 <Edit />
-              </el-icon>
+              </ElIcon>
               <el-popconfirm
                 confirm-button-text="确定"
                 cancel-button-text="取消"
@@ -34,7 +34,7 @@
                 @confirm="deleteFetchApi(item.key)"
               >
                 <template #reference>
-                  <el-icon size="24" color="#f44336"><Delete /></el-icon>
+                  <ElIcon :size="24" color="#f44336"><Delete /></ElIcon>
                 </template>
               </el-popconfirm>
             </div>
@@ -59,15 +59,17 @@
     ElButton,
     ElMessage,
     ElCascader,
+    ElIcon,
+    ExpandTrigger,
   } from 'element-plus';
-  import { useVisualData } from '@/visual-editor/hooks/useVisualData';
-  import type { FetchApiItem, VisualEditorModel } from '@/visual-editor/visual-editor.utils';
-  import { useModal } from '@/visual-editor/hooks/useModal';
   import { cloneDeep } from 'lodash-es';
+  import { Delete, Edit } from '@element-plus/icons-vue';
+  import { useImportSwaggerJsonModal } from './utils';
+  import type { FetchApiItem, VisualEditorModel } from '@/visual-editor/visual-editor.utils';
+  import { useVisualData } from '@/visual-editor/hooks/useVisualData';
+  import { useModal } from '@/visual-editor/hooks/useModal';
   import { generateNanoid } from '@/visual-editor/utils/';
   import { RequestEnum, ContentTypeEnum } from '@/enums/httpEnum';
-  import { useImportSwaggerJsonModal } from './utils';
-  import { Delete, Edit } from '@element-plus/icons-vue';
 
   interface IState {
     activeNames: string[];
@@ -162,14 +164,14 @@
           <ElFormItem label="请求数据" prop={'data.bind'}>
             <ElCascader
               v-model={state.ruleForm.data.bind}
-              options={models.value}
+              options={[...models.value]}
               clearable={true}
               props={{
                 checkStrictly: true,
                 children: 'entitys',
                 label: 'name',
                 value: 'key',
-                expandTrigger: 'hover',
+                expandTrigger: ExpandTrigger.HOVER,
               }}
               placeholder="请选择绑定的请求数据"
               onChange={handleBindChange}
@@ -183,12 +185,12 @@
                 children: 'entitys',
                 label: 'name',
                 value: 'key',
-                expandTrigger: 'hover',
+                expandTrigger: ExpandTrigger.HOVER,
               }}
               placeholder="请选择绑定的响应数据"
               onChange={handleBindChange}
               v-model={state.ruleForm.data.recv}
-              options={models.value}
+              options={[...models.value]}
             ></ElCascader>
           </ElFormItem>
         </ElForm>
@@ -246,6 +248,7 @@
 
     .model-actions {
       display: flex;
+
       i {
         padding: 6px;
         margin: 0 2px;

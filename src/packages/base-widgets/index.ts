@@ -1,11 +1,13 @@
-const modules = import.meta.globEager('./*/index.tsx')
+import { VisualEditorComponent } from '@/visual-editor/visual-editor.utils';
 
-const components = {}
+const modules = import.meta.globEager('./*/index.tsx');
 
-Object.keys(modules).forEach((key: string) => {
-  const name = key.replace(/\.\/(.*)\/index\.(tsx|vue)/, '$1')
-  components[name] = modules[key]?.default || modules[key]
-})
+const components: Record<string, VisualEditorComponent> = {};
 
-console.log(components, 'base-widgets')
-export default components
+Object.entries(modules).forEach(([key, module]) => {
+  const name = key.replace(/\.\/(.*)\/index\.(tsx|vue)/, '$1');
+  components[name] = module?.default || module;
+});
+
+console.log(components, 'base-widgets');
+export default components;
